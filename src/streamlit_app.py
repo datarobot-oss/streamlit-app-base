@@ -14,6 +14,7 @@ def start_streamlit():
     # Setup DR client
     set_client(Client(token=st.session_state.token, endpoint=st.session_state.endpoint))
 
+    st.logo(APP_LOGO)
     st.header('Hello world')
 
 
