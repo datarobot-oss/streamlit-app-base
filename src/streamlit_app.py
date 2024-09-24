@@ -18,6 +18,7 @@ def start_streamlit():
 
     st.logo(APP_LOGO)
     st.header('Hello world')
+    st.text('This is a Streamlit application base template to kickstart your custom app development!')
 
 
 if __name__ == "__main__":
