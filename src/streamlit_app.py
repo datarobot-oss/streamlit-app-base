@@ -9,9 +9,6 @@ from utils import initiate_session_state
 st.set_page_config(page_title=I18N_APP_NAME, page_icon=APP_FAVICON, layout=APP_LAYOUT,
                    initial_sidebar_state=SIDEBAR_DEFAULT_STATE)
 
-def crash_it():
-	return 14 / 0
-
 
 def start_streamlit():
     initiate_session_state()
@@ -22,8 +19,6 @@ def start_streamlit():
     st.logo(APP_LOGO)
     st.header('Hello world')
     st.text('This is a Streamlit application base template to kickstart your custom app development!')
-
-    st.button("CRASH", on_click=crash_it)
 
 
 if __name__ == "__main__":
