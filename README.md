@@ -21,7 +21,8 @@ export endpoint="$DATAROBOT_ENDPOINT"  # Example: https://app.datarobot.com/api/
 ```
 
 ## How to add and use runtime parameters?
-Create a metadata.yaml file in your application source folder. Here is an example of a DEPLOYMENT_ID:
+Create a metadata.yaml file in your application source folder. Here is an example of a DEPLOYMENT_ID which will create
+an environment variable called `MLOPS_RUNTIME_PARAM_DEPLOYMENT_ID`:
 ```yaml
 runtimeParameterDefinitions:
 - fieldName: DEPLOYMENT_ID
@@ -31,7 +32,7 @@ runtimeParameterDefinitions:
 Once this file is part of your Application source in DataRobot, it will display the new runtime parameter(s) as part of the
 app configuration.
 
-To use the parameters we recommend to add them via `start-app.sh`, add this conditional export before `streamlit run`:
+To use the parameters we recommend to add them via `start-app.sh`, add this conditional export before `streamlit run` starts:
 ```shell
 if [ -n "$MLOPS_RUNTIME_PARAM_DEPLOYMENT_ID" ]; then
   export deployment_id="$MLOPS_RUNTIME_PARAM_DEPLOYMENT_ID"
