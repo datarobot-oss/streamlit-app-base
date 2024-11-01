@@ -1,6 +1,6 @@
 {
-   "name":"Streamlit App Base",
-   "description":"An empty Streamlit base template to speed up your custom app development",
+   "name": "Streamlit App Base",
+   "description": "DataRobot's Streamlit example app provides a foundational app out of the box so that you can get started building a dynamic application in minutes.",
    "templateMetadata": {
       "tags": [
          "Streamlit",
@@ -9,11 +9,11 @@
       ],
       "source": {
          "repositoryUrl": "https://github.com/datarobot-oss/streamlit-app-base",
-         "releaseTag": "10.2"
+         "releaseTag": "10.2.2"
       },
       "previewImage": null
    },
-   "templateType":"customApplicationTemplate",
-   "templateSubType":"customApplicationTemplate",
-   "executionEnvironmentName":"[DataRobot] Python 3.12"
+   "templateType": "customApplicationTemplate",
+   "templateSubType": "customApplicationTemplate",
+   "executionEnvironmentName": "[DataRobot] Python 3.12 Applications Base"
 }
