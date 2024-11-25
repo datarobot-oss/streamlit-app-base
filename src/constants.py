@@ -1,6 +1,6 @@
 # Set asset path or remote url
 APP_LOGO = './assets/dr-logo-for-dark-bg.svg'
-APP_FAVICON = './assets/datarobot_favicon.png'
+APP_FAVICON = './assets/favicon.png'
 # Set app layout to either 'centered' or 'wide'
 APP_LAYOUT = 'centered'
 
