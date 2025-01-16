@@ -9,7 +9,7 @@
       ],
       "source": {
          "repositoryUrl": "https://github.com/datarobot-oss/streamlit-app-base",
-         "releaseTag": "11.0.0"
+         "releaseTag": "11.0.1"
       },
       "previewImage": null
    },
