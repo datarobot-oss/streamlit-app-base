@@ -1,3 +1,16 @@
+# Environment
+.env
+.env.*
+!.env.template
+
+# Pulumi
+pulumi_config.json
+Pulumi.*.yaml
+!infra/Pulumi.yaml
+
+# Virtual environments
+.venv/
+
 # JetBrains IDE
 .idea
 

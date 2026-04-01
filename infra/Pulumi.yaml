@@ -1,0 +1,13 @@
+---
+name: "streamlit-app-base"
+description: |-
+  Streamlit App Base - DataRobot Custom Application
+runtime:
+  name: python
+  options:
+    toolchain: uv
+config:
+  pulumi:tags:
+    value:
+      pulumi:template: python
+  datarobot:tracecontext: "streamlit-app-base"

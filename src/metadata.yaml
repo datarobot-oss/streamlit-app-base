@@ -1,0 +1,7 @@
+name: runtime-params
+
+runtimeParameterDefinitions:
+  - fieldName: DATAROBOT_API_TOKEN
+    type: credential
+  - fieldName: DATAROBOT_ENDPOINT
+    type: string

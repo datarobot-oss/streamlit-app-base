@@ -1,0 +1,75 @@
+---
+# Taskfile for Streamlit App Base
+# - `task dev` でローカル検証サーバーを起動
+# - `task deploy` (= `dr task run deploy`) で DataRobot へデプロイ
+version: '3'
+env:
+  ENV: testing
+dotenv: ['.env', '.env.{{.ENV}}']
+
+includes:
+  infra:
+    taskfile: ./infra/Taskfile.yaml
+    dir: ./infra
+
+tasks:
+  default:
+    desc: "Show all available tasks"
+    silent: true
+    cmds:
+      - task --list --sort none
+
+  start:
+    desc: "Prepare local development environment"
+    cmds:
+      - task: setup-env
+      - task: install
+      - echo 'Setup complete. Run `task dev` to start the app locally, or `task deploy` to deploy to DataRobot.'
+
+  setup-env:
+    desc: "Create .env from template if it does not exist"
+    status:
+      - test -f .env
+    cmds:
+      - cp .env.template .env
+      - echo '.env file created from .env.template. Please set DATAROBOT_API_TOKEN and DATAROBOT_ENDPOINT.'
+
+  install:
+    desc: "Install Python dependencies"
+    cmds:
+      - pip install -r src/requirements.txt
+
+  auth-check:
+    silent: true
+    desc: "Check DataRobot authentication"
+    cmds:
+      - |
+        if command -v dr &> /dev/null && dr auth help 2>&1 | grep -q "check"; then
+          echo "Checking authentication.."
+          dr auth check
+        else
+          echo "Skipping dr auth check (dr CLI not available). Ensure DATAROBOT_API_TOKEN is set in .env."
+        fi
+
+  dev:
+    desc: "Run Streamlit app locally for development"
+    deps:
+      - auth-check
+    cmds:
+      - echo "Starting Streamlit development server on http://localhost:8080"
+      - |
+        cd src && \
+        export token="$DATAROBOT_API_TOKEN" && \
+        export endpoint="$DATAROBOT_ENDPOINT" && \
+        streamlit run --server.port=8080 streamlit_app.py
+
+  deploy:
+    desc: "Deploy Streamlit app to DataRobot"
+    cmds:
+      - task: setup-env
+      - task: infra:deploy
+
+  destroy:
+    desc: "Destroy the deployed DataRobot application"
+    cmds:
+      - task: infra:destroy

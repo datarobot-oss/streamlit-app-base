@@ -1,0 +1,139 @@
+---
+# https://taskfile.dev
+version: '3'
+
+vars:
+  UV_CMD:
+    sh: |
+      if command -v uv >/dev/null 2>&1; then
+        if command -v env >/dev/null 2>&1; then
+          echo "env -u PYTHONPATH -u VIRTUAL_ENV uv"
+        else
+          echo "uv"
+        fi
+      else
+        echo ""
+      fi
+
+  PULUMI_SKIP_UPDATE_CHECK:
+    sh: |
+      if [ -n "${PULUMI_SKIP_UPDATE_CHECK:-}" ]; then
+        echo "${PULUMI_SKIP_UPDATE_CHECK}"
+      else
+        echo "0"
+      fi
+
+  PULUMI_DATAROBOT_PLUGIN_VERSION:
+    sh: |
+      if [ -n "${PULUMI_DATAROBOT_PLUGIN_VERSION:-}" ]; then
+        echo "${PULUMI_DATAROBOT_PLUGIN_VERSION}"
+      else
+        echo "v0.10.27"
+      fi
+
+  PULUMI_DATAROBOT_DEFAULT_URL:
+    sh: |
+      if [ -n "${PULUMI_DATAROBOT_DEFAULT_URL:-}" ]; then
+        echo "${PULUMI_DATAROBOT_DEFAULT_URL}"
+      else
+        echo "https://github.com/datarobot-community/pulumi-datarobot/releases/download/v0.10.27"
+      fi
+
+tasks:
+  auth-check:
+    silent: true
+    desc: "Check authentication prerequisites"
+    cmds:
+      - |
+        if command -v dr &> /dev/null && dr auth help 2>&1 | grep -q "check"; then
+          echo "Checking authentication.."
+          dr auth check
+        else
+          echo "Skipping auth check (dr CLI not available)"
+        fi
+
+  pulumi-datarobot-plugin-check:
+    silent: true
+    cmds:
+      - |
+        if [ "{{.PULUMI_SKIP_UPDATE_CHECK}}" = "1" ]; then
+          {{.UV_CMD}} run pulumi plugin install resource datarobot {{.PULUMI_DATAROBOT_PLUGIN_VERSION}} \
+          --server {{.PULUMI_DATAROBOT_DEFAULT_URL}}
+        fi
+
+  install:
+    desc: "Install infra dependencies"
+    cmds:
+      - echo "Installing infra dependencies.."
+      - "{{.UV_CMD}} sync --all-extras --dev"
+
+  deploy:
+    silent: true
+    desc: "Deploy the Streamlit app to DataRobot"
+    aliases: [up]
+    deps:
+      - auth-check
+    cmds:
+      - task: pulumi-datarobot-plugin-check
+      - echo "Deploying Streamlit app to DataRobot.."
+      - "{{.UV_CMD}} run pulumi up {{.CLI_ARGS}}"
+
+  deploy-yes:
+    silent: true
+    desc: "Deploy (non-interactive, auto-confirm)"
+    deps:
+      - auth-check
+    cmds:
+      - task: pulumi-datarobot-plugin-check
+      - echo "Deploying Streamlit app to DataRobot (non-interactive).."
+      - "{{.UV_CMD}} run pulumi up -y {{.CLI_ARGS}}"
+
+  refresh:
+    silent: true
+    desc: "Refresh the infrastructure state"
+    deps:
+      - auth-check
+    cmds:
+      - task: pulumi-datarobot-plugin-check
+      - echo "Refreshing infrastructure.."
+      - "{{.UV_CMD}} run pulumi refresh {{.CLI_ARGS}}"
+
+  info:
+    silent: true
+    desc: "Show Pulumi stack info"
+    cmds:
+      - task: pulumi-datarobot-plugin-check
+      - "{{.UV_CMD}} run pulumi stack {{.CLI_ARGS}}"
+
+  init:
+    silent: true
+    desc: "Initialize a new Pulumi stack"
+    cmds:
+      - "{{.UV_CMD}} run pulumi stack init {{.CLI_ARGS}}"
+
+  select:
+    silent: true
+    desc: "Select a Pulumi stack"
+    cmds:
+      - "{{.UV_CMD}} run pulumi stack select {{.CLI_ARGS}}"
+
+  destroy:
+    silent: true
+    aliases: [down]
+    desc: "Destroy the deployed application"
+    deps:
+      - auth-check
+    cmds:
+      - task: pulumi-datarobot-plugin-check
+      - echo "Destroying the deployed application.."
+      - "{{.UV_CMD}} run pulumi destroy {{.CLI_ARGS}}"
+
+  destroy-yes:
+    silent: true
+    desc: "Destroy (non-interactive, auto-confirm)"
+    deps:
+      - auth-check
+    cmds:
+      - task: pulumi-datarobot-plugin-check
+      - echo "Destroying the deployed application (non-interactive).."
+      - "{{.UV_CMD}} run pulumi destroy -y {{.CLI_ARGS}}"
