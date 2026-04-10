@@ -1,0 +1,9 @@
+# Runtime parameters let you configure the app from the DataRobot UI without changing code.
+# Uncomment and edit the block below to add your own parameters, then add the corresponding
+# fields to the Config class in config.py.
+#
+# runtimeParameterDefinitions:
+# - fieldName: DEPLOYMENT_ID
+#   type: string
+#   defaultValue: ""
+#   description: "ID of the DataRobot deployment this app will interact with."

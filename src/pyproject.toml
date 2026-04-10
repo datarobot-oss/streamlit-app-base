@@ -1,0 +1,40 @@
+[project]
+name = "streamlit-app-base"
+version = "0.1.0"
+description = "DataRobot Streamlit application template"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "streamlit>=1.38.0",
+    "datarobot>=3.6.0",
+    "requests>=2.33.0",
+    "litellm>=1.67.0",
+    "pydantic-settings>=2.0.0",
+]
+
+[dependency-groups]
+dev = [
+    "ruff>=0.11.0",
+]
+
+[tool.uv]
+package = false
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = [
+    "E",   # pycodestyle errors
+    "F",   # pyflakes
+    "I",   # isort
+    "UP",  # pyupgrade
+    "B",   # flake8-bugbear
+    "SIM", # flake8-simplify
+]
+
+[tool.ruff.lint.isort]
+known-first-party = ["config", "constants", "utils"]
+
+[tool.ruff.format]
+quote-style = "double"
