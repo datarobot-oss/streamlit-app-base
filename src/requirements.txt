@@ -1,2 +1,0 @@
-streamlit>=1.38.0
-datarobot>=3.5.2
